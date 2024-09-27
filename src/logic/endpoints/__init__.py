@@ -9,7 +9,6 @@ from logic.endpoints.recipe import recipe_router
 from logic.endpoints.request import request_router
 from logic.endpoints.user import user_router
 
-from front.endpoints.test2 import front_router
 
 routers = [
     ingredient_router,
@@ -22,5 +21,4 @@ routers = [
     comment_router,
     request_router,
     auth_router,
-    front_router,
 ]

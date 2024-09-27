@@ -8,6 +8,7 @@ from logic.authorization.auth import create_access_token, get_current_user, auth
     ACCESS_TOKEN_EXPIRE_MINUTES, get_current_admin
 from logic.models.connection import PostgresConnection
 from logic.models.schemas.user import UserGet
+from logic.utils.exceptions.exceptions import incorrect_creds_exception
 
 auth_router = APIRouter(
     prefix='/api/v1',
@@ -22,13 +23,9 @@ async def login_for_access_token(
 ) -> Token:
     user = await authenticate_user(session, form_data.username, form_data.password)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise incorrect_creds_exception
     access_token = await create_access_token(
-        data={"sub": user.username, "is_admin": user.is_admin},
+        data={"sub": user.username},
         expires_minutes=ACCESS_TOKEN_EXPIRE_MINUTES
     )
     return Token(access_token=access_token, token_type="bearer")
@@ -36,20 +33,13 @@ async def login_for_access_token(
 
 # @auth_router.get("/userz")
 # async def read_users_me(
-#     current_user: Annotated[UserGet, Depends(get_current_user)],
+#     current_user=Depends(get_current_user),
 # ):
 #     return current_user
 
 
-@auth_router.get("/userz")
-async def read_users_me(
-    current_user=Depends(get_current_user),
-):
-    return current_user
-
-
-@auth_router.get("/admin")
-async def read_admin_me(
-    current_user: Annotated[UserGet, Depends(get_current_admin)],
-):
-    return {'response': 'hi admin'}
+# @auth_router.get("/admin")
+# async def read_admin_me(
+#     current_user: Annotated[UserGet, Depends(get_current_admin)],
+# ):
+#     return {'response': 'hi admin'}

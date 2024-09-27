@@ -6,10 +6,10 @@ from botocore.client import Config
 
 class YandexStorage:
 
-    access_key_id = os.environ.get('access_key_id'.upper())
-    secret_access_key = os.environ.get('secret_access_key'.upper())
-    bucket_name = os.environ.get('bucket_name'.upper())
-    endpoint_url = os.environ.get('endpoint_url'.upper())
+    access_key_id = os.environ.get('ACCESS_KEY_ID')
+    secret_access_key = os.environ.get('SECRET_ACCESS_KEY')
+    bucket_name = os.environ.get('BUCKET_NAME')
+    endpoint_url = os.environ.get('ENDPOINT_URL')
 
     @classmethod
     def create_s3_client(cls):

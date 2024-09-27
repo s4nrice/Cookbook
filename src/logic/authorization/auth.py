@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from logic.models.connection import PostgresConnection
 from logic.models.schemas.user import UserGet, UserFilter
 from logic.services.user import UserService
+from logic.utils.exceptions.exceptions import credentials_exception
 
 SECRET_KEY = str(os.environ.get('SECRET_KEY'))
 ALGORITHM = "HS256"
@@ -25,14 +26,12 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
-    is_admin: bool | None = None
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/token")
 
 
 async def get_user(session: AsyncSession, username: str) -> UserGet | None:
-    # TODO mb oshibka
     user_filter = UserFilter(username=username)
     user_arr: list[UserGet] = await UserService.filter(session, user_filter)
 
@@ -53,11 +52,8 @@ async def authenticate_user(session: AsyncSession, username: str, password: str)
 
 async def create_access_token(data: dict, expires_minutes: int = 1440):
     to_encode = data.copy()
-
     expire = datetime.now() + timedelta(minutes=expires_minutes)
-
     to_encode.update({"exp": expire})
-
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
@@ -66,18 +62,12 @@ async def get_current_user(
         token: Annotated[str, Depends(oauth2_scheme)],
         session: AsyncSession = Depends(PostgresConnection.get_db)
 ):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
-        is_admin: bool = payload.get("is_admin")
-        if username is None or is_admin is None:
+        if username is None:
             raise credentials_exception
-        token_data = TokenData(username=username, is_admin=is_admin)
+        token_data = TokenData(username=username)
     except InvalidTokenError:
         raise credentials_exception
     user = await get_user(session=session, username=token_data.username)
@@ -88,5 +78,5 @@ async def get_current_user(
 
 async def get_current_admin(current_user: UserGet = Depends(get_current_user)):
     if not current_user.is_admin:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough privileges")
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Недостаточно привилегий ")
     return current_user

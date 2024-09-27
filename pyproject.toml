@@ -2,11 +2,25 @@
 name = "diploma"
 version = "0.1.0"
 description = ""
-authors = ["sunrise <zantond31@gmail.com>"]
+authors = ["zyryanov anton <zantond31@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+fastapi = "^0.111.0"
+sqlalchemy = "^2.0.30"
+alembic = "^1.13.1"
+asyncpg = "^0.29.0"
+uvicorn = "^0.29.0"
+python-dotenv = "^1.0.1"
+black = "^24.4.2"
+fastapi-filter = "^2.0.0"
+boto3 = "^1.34.113"
+passlib = "^1.7.4"
+pyjwt = "^2.8.0"
+bcrypt = "4.0.1"
+python-multipart = "^0.0.9"
+fastui = "^0.6.0"
 
 
 [build-system]
