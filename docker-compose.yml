@@ -11,8 +11,6 @@ services:
     command: bash -c "cd /code/src/ && alembic upgrade head && uvicorn logic.main:server.app --host 0.0.0.0 --port 8080 --reload"
     ports:
       - "8080:8080"
-    networks:
-      - diploma_network
     depends_on:
       - postgres
     volumes:
@@ -20,19 +18,13 @@ services:
 
   postgres:
     image: postgres:latest
-    container_name: "postgres"
+    container_name: postgres
     env_file:
       - .env
     volumes:
-      - postgres_volume:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     ports:
-      - ${POSTGRES_PORT_OUT}:${POSTGRES_PORT_IN}
-    networks:
-      - diploma_network
+      - "${POSTGRES_PORT}:5432"
 
 volumes:
-  postgres_volume: {}
-
-networks:
-  diploma_network:
-    driver: "bridge"
+  postgres_data:

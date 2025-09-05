@@ -11,7 +11,6 @@ class RecipeIngredientBase(BaseSchema):
     quantity: int | None = None
     measure: MeasureType | None = None
     description: str | None = None
-    group_name: str | None = None
 
 
 class RecipeIngredientGet(RecipeIngredientBase):

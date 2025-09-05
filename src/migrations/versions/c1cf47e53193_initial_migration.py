@@ -1,8 +1,8 @@
-"""Initial revision
+"""initial migration
 
-Revision ID: 236883987ee3
+Revision ID: c1cf47e53193
 Revises: 
-Create Date: 2024-05-27 20:09:42.847674
+Create Date: 2025-09-05 20:52:45.135009
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '236883987ee3'
+revision: str = 'c1cf47e53193'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -60,13 +60,6 @@ def upgrade() -> None:
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
-    op.create_table('personal_category',
-    sa.Column('id', sa.String(), nullable=False),
-    sa.Column('name', sa.String(), nullable=False),
-    sa.Column('user_id', sa.String(), nullable=False),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('recipe',
     sa.Column('id', sa.String(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
@@ -91,49 +84,8 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('subscription',
-    sa.Column('id', sa.String(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('publisher_id', sa.String(), nullable=False),
-    sa.Column('subscriber_id', sa.String(), nullable=False),
-    sa.ForeignKeyConstraint(['publisher_id'], ['user.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['subscriber_id'], ['user.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('bookmark',
     sa.Column('id', sa.String(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('recipe_id', sa.String(), nullable=False),
-    sa.Column('user_id', sa.String(), nullable=False),
-    sa.Column('personal_category_id', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['personal_category_id'], ['personal_category.id'], ondelete='SET NULL'),
-    sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('comment',
-    sa.Column('id', sa.String(), nullable=False),
-    sa.Column('comment', sa.String(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('recipe_id', sa.String(), nullable=False),
-    sa.Column('user_id', sa.String(), nullable=False),
-    sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('notification',
-    sa.Column('id', sa.String(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
-    sa.Column('is_checked', sa.Boolean(), nullable=False),
-    sa.Column('subscription_id', sa.String(), nullable=False),
-    sa.Column('recipe_id', sa.String(), nullable=False),
-    sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['subscription_id'], ['subscription.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('rating',
-    sa.Column('id', sa.String(), nullable=False),
-    sa.Column('rating', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('recipe_id', sa.String(), nullable=False),
     sa.Column('user_id', sa.String(), nullable=False),
@@ -158,7 +110,6 @@ def upgrade() -> None:
     sa.Column('quantity', sa.Integer(), nullable=True),
     sa.Column('measure', sa.Enum('to_taste', 'pieces', 'grams', 'kilogram', 'milliliters', 'liters', 'glass', 'teaspoon', 'tablespoon', 'pack', 'pinch', 'clove', 'slice', name='measuretype'), nullable=False),
     sa.Column('description', sa.String(), nullable=True),
-    sa.Column('group_name', sa.String(), nullable=True),
     sa.Column('recipe_id', sa.String(), nullable=False),
     sa.Column('ingredient_id', sa.String(), nullable=False),
     sa.ForeignKeyConstraint(['ingredient_id'], ['ingredient.id'], ondelete='RESTRICT'),
@@ -182,14 +133,9 @@ def downgrade() -> None:
     op.drop_table('recipe_step')
     op.drop_table('recipe_ingredient')
     op.drop_table('recipe_category')
-    op.drop_table('rating')
-    op.drop_table('notification')
-    op.drop_table('comment')
     op.drop_table('bookmark')
-    op.drop_table('subscription')
     op.drop_table('request')
     op.drop_table('recipe')
-    op.drop_table('personal_category')
     op.drop_table('user')
     op.drop_table('ingredient')
     op.drop_table('dish_type')

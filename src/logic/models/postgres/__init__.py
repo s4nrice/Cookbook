@@ -8,14 +8,8 @@ __all__ = [
     "RecipeStep",
     "RecipeIngredient",
     "RecipeCategory",
-    "Rating",
-    "Comment",
     "Request",
-    "PersonalCategory",
     "Bookmark",
-    "Subscription",
-    "Notification"
 ]
 from .models import (User, Recipe, Ingredient, DishType, Cuisine, CookingMethod, RecipeStep,
-                     RecipeIngredient, RecipeCategory, Rating, Comment, Request, PersonalCategory, Bookmark,
-                     Subscription, Notification)
+                     RecipeIngredient, RecipeCategory, Request, Bookmark)

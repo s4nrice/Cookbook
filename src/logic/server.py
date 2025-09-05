@@ -1,7 +1,6 @@
 from fastapi import FastAPI, status, APIRouter
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
-from fastui import FastUI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -9,10 +8,10 @@ from fastapi.staticfiles import StaticFiles
 
 from logic.endpoints import routers
 
-origins = [
-    "http://localhost:3000",  # Адрес вашего React приложения
-    "http://127.0.0.1:3000"
-]
+# origins = [
+#     "http://localhost:3000",  # Адрес вашего React приложения
+#     "http://127.0.0.1:3000"
+# ]
 
 
 class Server:
@@ -20,16 +19,15 @@ class Server:
     def __init__(self, debug: bool = True) -> None:
 
         self._app = FastAPI(debug=debug)
-        self._app.mount("/static", StaticFiles(directory="./front/static"), name="static")
         self.__init_routers()
         self.__init_events()
-        self._app.add_middleware(
-            CORSMiddleware,
-            allow_origins=origins,
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
+        # self._app.add_middleware(
+        #     CORSMiddleware,
+        #     allow_origins=origins,
+        #     allow_credentials=True,
+        #     allow_methods=["*"],
+        #     allow_headers=["*"],
+        # )
 
     @property
     def app(self):

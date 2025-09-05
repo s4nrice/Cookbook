@@ -1,8 +1,9 @@
 [tool.poetry]
-name = "diploma"
+name = "CookBook"
 version = "0.1.0"
+package-mode = false
 description = ""
-authors = ["zyryanov anton <zantond31@gmail.com>"]
+authors = ["s4nrice <zantond31@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -20,7 +21,7 @@ passlib = "^1.7.4"
 pyjwt = "^2.8.0"
 bcrypt = "4.0.1"
 python-multipart = "^0.0.9"
-fastui = "^0.6.0"
+git-filter-repo = "^2.47.0"
 
 
 [build-system]

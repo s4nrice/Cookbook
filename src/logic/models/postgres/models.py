@@ -28,8 +28,8 @@ class User(Base):
 
     # Relationships
     user_recipe: Mapped[List["Recipe"]] = relationship(back_populates="author")
-    user_rating: Mapped[List["Rating"]] = relationship(back_populates="rating_user")
-    user_comment: Mapped[List["Comment"]] = relationship(back_populates="comment_user")
+    # user_rating: Mapped[List["Rating"]] = relationship(back_populates="rating_user")
+    # user_comment: Mapped[List["Comment"]] = relationship(back_populates="comment_user")
     # user_request: Mapped[List["Request"]] = relationship(back_populates="request_user")
     # user_personal_category: Mapped[List["PersonalCategory"]] = relationship(back_populates="personal_category_user")
     # user_subscription_pub: Mapped[List["Subscription"]] = relationship(back_populates="subscription_pub_user")
@@ -60,8 +60,8 @@ class Recipe(Base):
     categories: Mapped[List["RecipeCategory"]] = relationship(back_populates="recipe_category_recipe")
 
     # Independend Relationships
-    recipe_rating: Mapped[List["Rating"]] = relationship(back_populates="rating_recipe")
-    recipe_comment: Mapped[List["Comment"]] = relationship(back_populates="comment_recipe")
+    # recipe_rating: Mapped[List["Rating"]] = relationship(back_populates="rating_recipe")
+    # recipe_comment: Mapped[List["Comment"]] = relationship(back_populates="comment_recipe")
     # recipe_bookmark: Mapped[List["Bookmark"]] = relationship(back_populates="bookmark_recipe")
     # recipe_notification: Mapped[List["Notification"]] = relationship(back_populates="notification_recipe")
 
@@ -73,7 +73,7 @@ class RecipeIngredient(Base):
     quantity: Mapped[int] = mapped_column(nullable=True)
     measure: Mapped[MeasureType] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=True)
-    group_name: Mapped[str] = mapped_column(nullable=True)
+    # group_name: Mapped[str] = mapped_column(nullable=True)
     recipe_id: Mapped[str] = mapped_column(ForeignKey("recipe.id", ondelete="CASCADE"), nullable=False)
     ingredient_id: Mapped[str] = mapped_column(ForeignKey("ingredient.id", ondelete="RESTRICT"), nullable=False)
 
@@ -172,33 +172,6 @@ class RecipeCategory(Base):
         foreign_keys=[cooking_method_id])
 
 
-class Rating(Base):
-    __tablename__ = "rating"
-
-    id: Mapped[str] = mapped_column(primary_key=True, default=lambda: str(uuid4()))
-    rating: Mapped[int] = mapped_column(nullable=False)
-    created_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
-    recipe_id: Mapped[str] = mapped_column(ForeignKey("recipe.id", ondelete="CASCADE"), nullable=False)
-    user_id: Mapped[str] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-
-    # Relationships
-    rating_recipe: Mapped["Recipe"] = relationship(back_populates="recipe_rating")
-    rating_user: Mapped["User"] = relationship(back_populates="user_rating")
-
-
-class Comment(Base):
-    __tablename__ = "comment"
-
-    id: Mapped[str] = mapped_column(primary_key=True, default=lambda: str(uuid4()))
-    comment: Mapped[str] = mapped_column(nullable=False)
-    created_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
-    recipe_id: Mapped[str] = mapped_column(ForeignKey("recipe.id", ondelete="CASCADE"), nullable=False)
-    user_id: Mapped[str] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-
-    # Relationships
-    comment_recipe: Mapped["Recipe"] = relationship(back_populates="recipe_comment")
-    comment_user: Mapped["User"] = relationship(back_populates="user_comment")
-
 
 class Request(Base):
     __tablename__ = "request"
@@ -213,16 +186,16 @@ class Request(Base):
     # request_user: Mapped["User"] = relationship(back_populates="user_request")
 
 
-class PersonalCategory(Base):
-    __tablename__ = "personal_category"
+# class PersonalCategory(Base):
+#     __tablename__ = "personal_category"
 
-    id: Mapped[str] = mapped_column(primary_key=True, default=lambda: str(uuid4()))
-    name: Mapped[str] = mapped_column(nullable=False)
-    user_id: Mapped[str] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+#     id: Mapped[str] = mapped_column(primary_key=True, default=lambda: str(uuid4()))
+#     name: Mapped[str] = mapped_column(nullable=False)
+#     user_id: Mapped[str] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
 
-    # Relationships
-    # personal_category_user: Mapped["User"] = relationship(back_populates="user_personal_category")
-    # personal_category_bookmark: Mapped[List["Bookmark"]] = relationship(back_populates="bookmark_personal_category")
+#     # Relationships
+#     # personal_category_user: Mapped["User"] = relationship(back_populates="user_personal_category")
+#     # personal_category_bookmark: Mapped[List["Bookmark"]] = relationship(back_populates="bookmark_personal_category")
 
 
 class Bookmark(Base):
@@ -232,40 +205,9 @@ class Bookmark(Base):
     created_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
     recipe_id: Mapped[str] = mapped_column(ForeignKey("recipe.id", ondelete="CASCADE"), nullable=False)
     user_id: Mapped[str] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-    personal_category_id: Mapped[str] = mapped_column(ForeignKey("personal_category.id", ondelete="SET NULL"), nullable=True)
+    # personal_category_id: Mapped[str] = mapped_column(ForeignKey("personal_category.id", ondelete="SET NULL"), nullable=True)
 
     # Relationships
     # bookmark_user: Mapped["User"] = relationship(back_populates="user_bookmark")
     # bookmark_recipe: Mapped["Recipe"] = relationship(back_populates="recipe_bookmark")
     # bookmark_personal_category: Mapped[List["PersonalCategory"]] = relationship(back_populates="personal_category_bookmark")
-
-
-class Subscription(Base):
-    __tablename__ = "subscription"
-
-    id: Mapped[str] = mapped_column(primary_key=True, default=lambda: str(uuid4()))
-    created_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
-    publisher_id: Mapped[str] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-    subscriber_id: Mapped[str] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
-
-    # Relationships
-    # TODO maybe problem
-    # subscription_pub_user: Mapped["User"] = relationship(back_populates="user_subscription_pub")
-    # subscription_sub_user: Mapped["User"] = relationship(back_populates="user_subscription_sub")
-    #
-    # subscription_notification: Mapped[List["Notification"]] = relationship(back_populates="notification_subscription")
-
-
-class Notification(Base):
-    __tablename__ = "notification"
-
-    id: Mapped[str] = mapped_column(primary_key=True, default=lambda: str(uuid4()))
-    created_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
-    is_checked: Mapped[bool] = mapped_column(nullable=False, default=False)
-    subscription_id: Mapped[str] = mapped_column(ForeignKey("subscription.id", ondelete="CASCADE"), nullable=False)
-    recipe_id: Mapped[str] = mapped_column(ForeignKey("recipe.id", ondelete="CASCADE"), nullable=False)
-
-    # Relationships
-    # notification_user: Mapped["User"] = relationship(back_populates="user_notification")
-    # notification_subscription: Mapped["Subscription"] = relationship(back_populates="subscription_notification")
-
