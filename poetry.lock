@@ -390,18 +390,6 @@ mongoengine = ["mongoengine (>=0.24.1,<0.28.0)"]
 sqlalchemy = ["SQLAlchemy (>=1.4.36,<2.1.0)"]
 
 [[package]]
-name = "git-filter-repo"
-version = "2.47.0"
-description = "Quickly rewrite git repository history"
-optional = false
-python-versions = ">=3.6"
-groups = ["main"]
-files = [
-    {file = "git_filter_repo-2.47.0-py3-none-any.whl", hash = "sha256:2cd04929b9024e83e65db571cbe36aec65ead0cb5f9ec5abe42158654af5ad83"},
-    {file = "git_filter_repo-2.47.0.tar.gz", hash = "sha256:411b27e68a080c07a69c233cb526dbc2d848b09a72f10477f4444dd0822cf290"},
-]
-
-[[package]]
 name = "greenlet"
 version = "3.2.4"
 description = "Lightweight in-process concurrent programming"
@@ -1650,4 +1638,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "bf0e4606d8d9c70157443b98bd9a88781e19ad5289a240e274954f0c7f296883"
+content-hash = "91830f78774206e80d77a9e8ce722b5529dc7f0d103c440d5ef9fc2c2bed5a0e"

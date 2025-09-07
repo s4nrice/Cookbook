@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.11-slim
 
 # Configure Poetry
 ENV POETRY_VERSION=1.8.2
@@ -16,9 +16,11 @@ ENV PATH="${PATH}:${POETRY_VENV}/bin"
 
 WORKDIR /code
 
-COPY ./ /code
+COPY poetry.lock pyproject.toml .
 
 RUN poetry config virtualenvs.create false \
   && poetry install --no-interaction --no-ansi
+
+COPY . .
 
 EXPOSE 8080
