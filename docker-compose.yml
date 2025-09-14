@@ -2,19 +2,19 @@ services:
   backend:
     container_name: backend
     build:
-      context: .
+      context: /backend
       dockerfile: Dockerfile
     volumes:
-      - ./:/code
+      - ./backend/:/code
     ports:
       - "8080:8080"
     env_file:
-      - .env
+      - ./backend/.env
     depends_on:
       - postgres
     command: >
-      bash -c "cd /code/src/ && alembic upgrade head && 
-      uvicorn logic.main:server.app --host 0.0.0.0 --port 8080 --reload"
+      bash -c "cd /code && alembic upgrade head && 
+      uvicorn src.core.main:server.app --host 0.0.0.0 --port 8080 --reload"
 
   postgres:
     image: postgres:17-alpine
@@ -22,7 +22,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:
-      - .env
+      - ./backend/.env
 
 volumes:
   postgres_data:
